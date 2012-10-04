@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ruby Course</title>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <style>
+      body {
+      }
+      div#twitter_msgs, div#facebook_msgs {
+        height: 10em;
+        overflow: hidden;
+      }
+
+      h2.label {
+        line-height:1.4em;
+        font-size: 2em;
+        padding-left: 0.5em
+      }
+      .accordion h2 {
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <div class="container">
+      <h1>Share on your favourite social network</h1>
+      <h2>http://localhost:4567</h2>
+      <div class="row">
+        <div class="span6">
+          <h2 class="label label-info">Twitter</h2>
+          <div class="well" id="twitter_msgs">
+          </div>
+        </div>
+        <div class="span6">
+          <h2 class="label label-info">Facebook</h2>
+          <div class="well" id="facebook_msgs">
+          </div>
+        </div>
+      </div>
+      <div class="accordion">
+        <h2 class="label label-warning" data-target="#quest-1" class="accordion-toggle" data-toggle="collapse">Quest #1: Options Parsing</h2>
+        <div id="quest-1" class="collapse">
+<pre>
+./socializer.rb
+{}
+
+./socializer.rb -q
+{:quotes => true}
+
+./socializer.rb -j
+{:jokes => true}
+
+./socializer.rb -j -f 10
+{:jokes => true, :funniest => 10}
+
+./socializer.rb -q -a "Alebert Einstein"
+{:quotes => true, :author => "Albert Einstein"}
+
+./socializer.rb -s twitter -u user
+{:share => "twitter", :user => "user"}
+</pre>
+        <div class="alert alert-info"><strong>hint:</strong>
+          <a href="http://ruby-doc.org/stdlib-1.9.3/libdoc/optparse/rdoc/OptionParser.html#label-Minimal+example" target="_blank">OptParse library</a>
+        </div>
+      </div>
+
+
+        <h2 class="label label-warning" data-target="#quest-2" class="accordion-toggle" data-toggle="collapse">Quest #2: File Reading</h2>
+        <div id="quest-2" class="collapse">
+          <p> Download <a href="quotes.txt" target="_blank">quotes.txt</a> and <a href="jokes.txt" target="_blank">jokes.txt</a> and parse it to get the following output:</p>
+<pre>
+./socializer.rb -q
+“Don't cry because it's over, smile because it happened.”
+- Dr. Seuss
+
+“I'm selfish, impatient and a little insecure. I make mistakes, I am out
+of control and at times hard to handle. But if you can't handle me at my
+worst, then you sure as hell don't deserve me at my best.”
+- Marilyn Monroe
+
+...
+
+
+./socializer.rb -j
+All of the iPhone 5 jokes are just slightly improved iPhone 4 jokes.
+
+Do you know why Facebook went public? They couldn't figure out the
+privacy settings.
+...
+
+./socializer.rb -j -f 2
+A neutron walks into a bar and asks how much for a drink. The bartender
+replies "for you, no charge".
+
+I was raised as an only child, which really annoyed my sister.
+
+./socializer.rb -q -a "Alebert Einstein"
+“There are only two ways to live your life. One is as though nothing is
+a miracle. The other is as though everything is a miracle.”
+- Albert Einstein
+
+“I am enough of an artist to draw freely upon my imagination.
+Imagination is more important than knowledge. Knowledge is limited.
+Imagination encircles the world.”
+- Albert Einstein
+</pre>
+          <p>The quotes.txt has a format of:</p>
+            <pre>
+Author 1
+Quote 1
+Author 2
+Quote 2 </pre>
+          <p>The jokes.txt has a format of:</p>
+            <pre>
+Funniness 1
+Joke 1
+Funniness 2
+Joke 2</pre>
+          <p>Create classes Joke and Quote with correspondig attributes and constructor to store the parsed data.</p>
+</div>
+
+        <h2 class="label label-warning" data-target="#quest-3" class="accordion-toggle" data-toggle="collapse">Quest #3: Modules Inclusion</h2>
+        <div id="quest-3" class="collapse">
+          <p> Let's say there are the following rules for sharing on different platforms. Twitter requires the message to have 140 characters at most. For Facebook, lets say it's not appropriate to make jokes about it or its founder. </p>
+          <p> Create modules Tweetable and Facebookable that will define methods saying if it's possible to share the object given this contratins.</p>
+          <p> Finally, use this methods to filter the messages to show only those that re suitable for sharing on given service:</p>
+<pre>
+./socializer.rb -q -s twitter
+“Don't cry because it's over, smile because it happened.”
+- Dr. Seuss
+
+“Those who mind don't matter, and those who matter don't mind.”
+- Bernard M. Baruch
+...
+
+./socializer.rb -j -s facebook
+All of the iPhone 5 jokes are just slightly improved iPhone 4 jokes.
+
+I was raised as an only child, which really annoyed my sister.
+</pre>
+</div>
+        <h2 class="label label-warning" data-target="#quest-4" class="accordion-toggle" data-toggle="collapse">Quest #4: Calling External Service</h2>
+        <div id="quest-4" class="collapse">
+          <p> It's possible to send the data to this site to show it on the top. The message shows in the left or right collumn depending on the target service.</p>
+          <p> You can use the following code to call the service (don't forget to install the libraries):</p>
+<pre>
+require 'httparty'
+require 'json'
+
+class CourseBoardClient
+  include HTTParty
+  base_uri 'http://147.251.51.35:4567'
+
+  def self.tweet(user, text)
+    post('/tweet', :body => {:username => user,
+                              :text => text}.to_json)
+  end
+
+  def self.facebook(user, text)
+    post('/facebook', :body => {:username => user,
+                                :text => text}.to_json)
+  end
+end
+</pre>
+<pre>
+./socializer.rb -q -s twitter -u twitterUser
+# sends a random quote as a tweet
+
+./socializer.rb -j -s facebook -u facebookUser
+# sends a random joke as a facebook message
+</pre>
+</div>
+    </div>
+
+    </body>
+
+    <script type="text/javascript">
+      window.onload = function(){
+        connect = function(service){
+          var show = function(el){
+            return function(msg){ el.innerHTML = msg + '<br />' + el.innerHTML; }
+          }(document.getElementById(service + '_msgs'));
+
+          var ws       = new WebSocket('ws://' + window.location.host + '/' + service);
+          ws.onmessage = function(m) { show(m.data); };
+        };
+        connect('twitter');
+        connect('facebook');
+      }
+</script>
+  </html>
